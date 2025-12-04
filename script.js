@@ -1,14 +1,12 @@
-// script.js – Smooth Scroll, Overlay, Reveal, Tilt, Magnetic Buttons
-
 document.addEventListener("DOMContentLoaded", () => {
   const qs = (s, ctx = document) => ctx.querySelector(s);
   const qsa = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
 
-  /* ===== Jahr im Footer ===== */
+  /* Jahr im Footer */
   const yearEl = qs("#year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ===== Scroll-Bar oben ===== */
+  /* Scroll-Bar */
   const scrollFill = qs(".scroll-bar__fill");
   const updateScrollBar = () => {
     if (!scrollFill) return;
@@ -22,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScrollBar();
   window.addEventListener("scroll", updateScrollBar);
 
-  /* ===== Overlay Navigation ===== */
+  /* Overlay Navigation */
   const overlay = qs(".overlay");
   const menuToggle = qs(".menu-toggle");
   const overlayClose = qs(".overlay__close");
@@ -40,36 +38,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   menuToggle?.addEventListener("click", openOverlay);
   overlayClose?.addEventListener("click", closeOverlay);
-
   overlay?.addEventListener("click", (e) => {
     if (e.target === overlay) closeOverlay();
   });
+  qsa(".overlay__link").forEach((link) =>
+    link.addEventListener("click", closeOverlay)
+  );
 
-  /* ===== Smooth Scroll ===== */
-  const smoothScrollTo = (target) => {
-    if (!target) return;
-    const offset = 72;
-    const top =
-      target.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
-
-  qsa(".js-scroll").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      const href = el.getAttribute("href");
-      const dataTarget = el.dataset.target;
-      const id = dataTarget || (href && href.startsWith("#") ? href : null);
-      if (!id) return;
-
-      const target = qs(id);
-      if (!target) return;
-      e.preventDefault();
-      smoothScrollTo(target);
-      closeOverlay();
+  /* data-nav-target Buttons */
+  qsa("[data-nav-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-nav-target");
+      if (target) window.location.href = target;
     });
   });
 
-  /* ===== Reveal on Scroll ===== */
+  /* Reveal-on-Scroll */
   const revealEls = qsa(".reveal");
   if (revealEls.length) {
     const observer = new IntersectionObserver(
@@ -81,12 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       },
-      { threshold: 0.18 }
+      { threshold: 0.2 }
     );
     revealEls.forEach((el) => observer.observe(el));
   }
 
-  /* ===== Tilt-Effekt für Panel & Kontaktkarte ===== */
+  /* Tilt-Effekt */
   const tiltEls = qsa("[data-tilt]");
   const isTouch =
     "ontouchstart" in window ||
@@ -95,16 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!isTouch && tiltEls.length) {
     tiltEls.forEach((el) => {
-      const maxTilt = 6;
+      const intensity = el.getAttribute("data-tilt-intensity");
+      const maxTilt = intensity === "strong" ? 8 : 5;
 
       const handleMove = (e) => {
         const rect = el.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-
         const rotateX = y * -maxTilt;
         const rotateY = x * maxTilt;
-
         el.style.transform =
           `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
       };
@@ -119,29 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ===== Magnetic Buttons ===== */
-  const magneticButtons = qsa(".btn-magnetic");
-  if (!isTouch && magneticButtons.length) {
-    magneticButtons.forEach((btn) => {
-      const strength = 18;
-
-      const onMove = (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-      };
-
-      const reset = () => {
-        btn.style.transform = "translate(0, 0)";
-      };
-
-      btn.addEventListener("mousemove", onMove);
-      btn.addEventListener("mouseleave", reset);
-    });
-  }
-
-  /* ===== Fake Form Submit (Design-Demo) ===== */
+  /* Fake Form Submit */
   const form = qs(".contact-form");
   if (form) {
     form.addEventListener("submit", (e) => {
@@ -149,12 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const btn = form.querySelector("button[type='submit']");
       if (!btn) return;
       const original = btn.textContent;
-
       btn.disabled = true;
       btn.textContent = "Danke, Anfrage erfasst.";
       setTimeout(() => {
         btn.disabled = false;
         btn.textContent = original;
+        form.reset();
       }, 2400);
     });
   }
