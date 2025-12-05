@@ -144,17 +144,45 @@ h3,
 }
 
 .overlay__link {
-  color: var(--text-strong);
+  position: relative;
+  display: inline-block;
+  color: var(--text-soft);
   text-decoration: none;
-  font-size: 2.1rem;
-  letter-spacing: 0.12em;
+  font-size: 1.9rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   font-family: "Cormorant Garamond", serif;
+  transition:
+    color 220ms ease,
+    transform 220ms ease,
+    text-shadow 220ms ease;
+}
+
+/* Goldener Unterstrich + leichter Slide-Effekt */
+.overlay__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold-soft), var(--gold-strong));
+  box-shadow: 0 0 10px rgba(243, 217, 164, 0.7);
+  transition: width 260ms ease;
 }
 
 .overlay__link:hover {
   color: var(--gold-soft);
+  transform: translateX(6px);
+  text-shadow:
+    0 0 10px rgba(243, 217, 164, 0.8),
+    0 0 20px rgba(243, 217, 164, 0.6);
 }
+
+.overlay__link:hover::after {
+  width: 100%;
+}
+
 
 .overlay__meta {
   margin-top: auto;
@@ -902,7 +930,7 @@ textarea:focus {
 
 /* MOBILE MENU BUTTON */
 .lux-menu-btn {
-  display: none;
+  display: flex; /* <<< WICHTIG: war vorher none */
   width: 44px;
   height: 44px;
   border-radius: 999px;
@@ -918,10 +946,11 @@ textarea:focus {
 }
 
 .lux-menu-btn span {
-  width: 18px;
-  height: 2px;
-  background: var(--bronze-soft);
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
+  background: var(--gold-soft);
+  box-shadow: 0 0 6px rgba(243, 217, 164, 0.7);
 }
 
 /* Hover Glow */
