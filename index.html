@@ -35,18 +35,18 @@
         <button class="overlay__close" aria-label="Menü schließen">×</button>
       </div>
 
-      <ul class="overlay__list">
-        <li><a href="index.html" class="overlay__link">Start</a></li>
-        <li><a href="wer-bin-ich.html" class="overlay__link">Wer ich bin</a></li>
-        <li><a href="immobilien-management.html" class="overlay__link">Immobilien &amp; Verwaltung</a></li>
-        <li><a href="projektmanagement.html" class="overlay__link">Projekte &amp; Backoffice</a></li>
-        <li><a href="event-management.html" class="overlay__link">Events &amp; Termine</a></li>
-        <li><a href="buchhaltung.html" class="overlay__link">Buchhaltung</a></li>
-        <li><a href="kundenstimmen.html" class="overlay__link">Kundenstimmen</a></li>
-        <li><a href="faq.html" class="overlay__link">FAQ</a></li>
-        <li><a href="blog.html" class="overlay__link">Blog</a></li>
-        <li><a href="kontakt.html" class="overlay__link">Kontakt</a></li>
-      </ul>
+ <ul class="overlay__list">
+  <li><a href="#top" class="overlay__link">Start</a></li>
+  <li><a href="#experience" class="overlay__link">Erfahrung die bewegt</a></li>
+  <li><a href="#projektmanagement" class="overlay__link">Projekt Management</a></li>
+  <li><a href="#immobilien" class="overlay__link">Immobilien</a></li>
+  <li><a href="#eventmanagement" class="overlay__link">Event Management</a></li>
+  <li><a href="#buchhaltung" class="overlay__link">Buchhaltung</a></li>
+  <li><a href="#backoffice" class="overlay__link">Backoffice</a></li>
+  <li><a href="#kundenstimmen" class="overlay__link">Kundenstimmen</a></li>
+  <li><a href="#faq" class="overlay__link">FAQ</a></li>
+</ul>
+
 
       <p class="overlay__meta">
         Saskia Mesinger – Virtuelle Assistenz im Hintergrund für Unternehmer &amp; Immobilienprofis.
@@ -461,7 +461,107 @@ void main() {
   render();
 })();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const titleEl = document.querySelector(".welcome-title");
+  if (!titleEl) return;
 
+  const text = titleEl.innerText;
+  titleEl.innerHTML = "";
+
+  [...text].forEach(char => {
+    const span = document.createElement("span");
+    span.className = "welcome-letter";
+    span.textContent = char;
+    titleEl.appendChild(span);
+  });
+});
+</script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+  // ========= OVERLAY NAV =========
+  const overlay = document.querySelector(".overlay");
+  const openBtn = document.querySelector(".lux-menu-btn");   // 3 Punkte rechts oben
+  const closeBtn = document.querySelector(".overlay__close");
+  const overlayLinks = document.querySelectorAll(".overlay__link");
+
+  const openOverlay = () => {
+    if (!overlay) return;
+    overlay.classList.add("overlay--open");
+    document.body.style.overflow = "hidden"; // kein Scrollen im Hintergrund
+  };
+
+  const closeOverlay = () => {
+    if (!overlay) return;
+    overlay.classList.remove("overlay--open");
+    document.body.style.overflow = "";
+  };
+
+  if (openBtn) {
+    openBtn.addEventListener("click", openOverlay);
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeOverlay);
+  }
+
+  // Klick neben dem Inhalt schließt Overlay
+  if (overlay) {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        closeOverlay();
+      }
+    });
+  }
+
+  // ESC schließt Overlay
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeOverlay();
+    }
+  });
+
+  // ========= SMOOTH SCROLL für Overlay-Links =========
+  overlayLinks.forEach(link => {
+    const href = link.getAttribute("href") || "";
+
+    // nur interne Anker (#top, #faq, ...)
+    if (href.startsWith("#")) {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetEl = document.getElementById(targetId);
+
+        if (targetEl) {
+          closeOverlay();
+          // kleines Delay, damit die Animation sauber wirkt
+          setTimeout(() => {
+            targetEl.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+          }, 160);
+        }
+      });
+    }
+  });
+
+  // ========= OPTIONAL: Scroll-Bar oben steuern (falls noch nicht vorhanden) =========
+  const scrollFill = document.querySelector(".scroll-bar__fill");
+  if (scrollFill) {
+    const updateScrollBar = () => {
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+      scrollFill.style.width = `${progress * 100}%`;
+    };
+    window.addEventListener("scroll", updateScrollBar);
+    updateScrollBar();
+  }
+});
+
+</script>
 
 
   
