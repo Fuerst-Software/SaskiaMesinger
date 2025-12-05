@@ -21,9 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", updateScrollBar);
 
   /* Overlay Navigation */
-  const overlay = qs(".overlay");
-  const menuToggle = qs(".menu-toggle");
-  const overlayClose = qs(".overlay__close");
+ /* Overlay Navigation */
+const overlay = qs(".overlay");
+const menuToggle = qs(".lux-menu-btn"); // <<< geändert
+const overlayClose = qs(".overlay__close");
+
 
   const openOverlay = () => {
     if (!overlay) return;
