@@ -1,0 +1,224 @@
+<!-- GOLD FLOW CANVAS -->
+<canvas id="goldflow-canvas"></canvas>
+
+<style>
+  /* Canvas als Hintergrund – du kannst das natürlich anpassen */
+  #goldflow-canvas {
+    position: fixed;       /* oder absolute im Hero-Container */
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;           /* hinter dem Content */
+    display: block;
+  }
+</style>
+
+<script>
+(function() {
+  const canvas = document.getElementById('goldflow-canvas');
+  const gl = canvas.getContext('webgl', { antialias: true });
+
+  if (!gl) {
+    console.warn('WebGL nicht verfügbar');
+    return;
+  }
+
+  // ---------- Vertex Shader ----------
+  const vertexSrc = `
+    attribute vec2 a_position;
+    varying vec2 v_uv;
+
+    void main() {
+      v_uv = a_position * 0.5 + 0.5;  // von [-1,1] auf [0,1]
+      gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+  `;
+
+  // ---------- Fragment Shader ----------
+  const fragmentSrc = `
+    precision highp float;
+
+    uniform float u_time;
+    uniform vec2 u_resolution;
+    varying vec2 v_uv;
+
+    // Simple 2D Hash/Noise
+    float hash(vec2 p) {
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+    }
+
+    float noise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      float a = hash(i);
+      float b = hash(i + vec2(1.0, 0.0));
+      float c = hash(i + vec2(0.0, 1.0));
+      float d = hash(i + vec2(1.0, 1.0));
+      vec2 u = f * f * (3.0 - 2.0 * f);
+      return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    }
+
+    void main() {
+      vec2 uv = v_uv;
+
+      // Aspect-Korrektur, damit Wellen nicht verzogen werden
+      float aspect = u_resolution.x / u_resolution.y;
+      uv.x *= aspect;
+
+      float t = u_time * 0.18; // Slow-Motion Factor
+
+      // Hintergrund: sanfter, dunkler Gold-Nebel
+      vec2 center = vec2(0.5 * aspect, 0.5);
+      float dist = distance(uv, center);
+      float vignette = smoothstep(0.95, 0.35, dist);
+
+      vec3 bgColor = mix(
+        vec3(0.02, 0.01, 0.0),
+        vec3(0.16, 0.11, 0.03),
+        1.0 - vignette
+      );
+
+      // Mehrere überlagerte Wave-Bänder
+      vec3 gold = vec3(1.0, 0.85, 0.45);
+      vec3 deepGold = vec3(0.45, 0.25, 0.05);
+      vec3 color = bgColor;
+
+      // Funktion für eine Gold-Welle
+      for (int i = 0; i < 3; i++) {
+        float fi = float(i);
+        float phase = t * (0.6 + fi * 0.25);
+        float amp = 0.08 + fi * 0.02;
+        float freq = 1.7 + fi * 0.35;
+
+        float waveY = 0.5
+          + amp * sin(uv.x * freq + phase)
+          + 0.03 * sin(uv.x * (freq * 0.5) - phase * 0.7);
+
+        float thickness = 0.12 - fi * 0.02;
+        float d = abs(uv.y - waveY);
+
+        float core = smoothstep(thickness, 0.0, d);        // Kern
+        float edge = smoothstep(thickness * 1.8, thickness, d); // weicher Rand
+
+        // Grund-Goldfarbe
+        vec3 band = mix(deepGold, gold, core);
+
+        // Highlights (Specular / „Seide“-Effekt)
+        float highlight = pow(1.0 - d / thickness, 8.0);
+        highlight *= 0.8;
+        band += highlight * vec3(1.3, 1.2, 0.9);
+
+        // Leichtes „Flow-Noise“ entlang der Welle
+        float n = noise(vec2(uv.x * 6.0 + fi * 10.0, uv.y * 22.0 + t * 3.0));
+        float glitter = smoothstep(0.9, 1.0, n) * core * 0.7;
+        band += glitter * vec3(2.0, 1.7, 1.0);
+
+        // Zusammensetzen mit weichen Übergängen
+        color = mix(color, band, edge * 0.85);
+      }
+
+      // Globale Glow-Modulation über die Zeit
+      float globalGlow = 0.04 * sin(t * 1.5) + 0.04;
+      color += globalGlow * vec3(1.2, 1.05, 0.7);
+
+      // Finale Kontrast/„Luxus“-Anpassung
+      color = pow(color, vec3(0.9));  // leichte Gamma-Korrektur
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `;
+
+  // ---------- Shader Helper ----------
+  function createShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  const vShader = createShader(gl.VERTEX_SHADER, vertexSrc);
+  const fShader = createShader(gl.FRAGMENT_SHADER, fragmentSrc);
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vShader);
+  gl.attachShader(program, fShader);
+  gl.linkProgram(program);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+    return;
+  }
+
+  gl.useProgram(program);
+
+  // ---------- Fullscreen Quad ----------
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  const positions = new Float32Array([
+    -1, -1,
+     1, -1,
+    -1,  1,
+    -1,  1,
+     1, -1,
+     1,  1,
+  ]);
+  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+  const a_position = gl.getAttribLocation(program, 'a_position');
+  gl.enableVertexAttribArray(a_position);
+  gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+  const u_time = gl.getUniformLocation(program, 'u_time');
+  const u_resolution = gl.getUniformLocation(program, 'u_resolution');
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    const width = Math.floor(canvas.clientWidth * dpr);
+    const height = Math.floor(canvas.clientHeight * dpr);
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+      gl.viewport(0, 0, width, height);
+    }
+
+    gl.uniform2f(u_resolution, width, height);
+  }
+
+  // Canvas initial an Fenster anpassen
+  function fitToWindow() {
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    resize();
+  }
+
+  fitToWindow();
+  window.addEventListener('resize', () => {
+    fitToWindow();
+  });
+
+  let startTime = performance.now();
+
+  function render() {
+    const now = performance.now();
+    const t = (now - startTime) / 1000.0; // Sekunden
+
+    resize();
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.uniform1f(u_time, t);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    requestAnimationFrame(render);
+  }
+
+  render();
+})();
+</script>
