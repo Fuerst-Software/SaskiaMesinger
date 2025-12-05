@@ -294,26 +294,6 @@ h3,
   align-items: center;
 }
 
-/* Gold-Schweif als 4K Bild im Hintergrund */
-.hero::before {
-  content: "";
-  position: absolute;
-  left: 20%;
-  top: 50%;
-  transform: translate(-50%, -50%);   /* exakt mittig im Hero */
-
-  /* Breite/Höhe so, dass der Schweif breit läuft, aber nicht alles zuballert */
-  width: 140%;
-  max-width: 1800px;
-  height: 260px;
-
-  background:
-    url("goldfloww.png") center center / contain no-repeat;
-  opacity: 0.6;                        /* dezent, edel */
-  mix-blend-mode: screen;              /* Gold „glüht“ auf Navy */
-  pointer-events: none;
-  z-index: 0;
-}
 
 
 .hero-wordmark {
@@ -959,4 +939,266 @@ textarea:focus {
   .lux-menu-btn {
     display: flex;
   }
+}
+/* HERO jetzt vertikal statt nebeneinander */
+.hero-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px; /* Abstand zwischen HOW/TO und Panel */
+}
+
+/* Wortmarke jetzt zentriert links */
+.hero-wordmark {
+  margin-left: 4vw;
+}
+
+/* Panel volle Breite bis zur max-width, wie vorher nur jetzt unten */
+.hero-panel {
+  width: 100%;
+  max-width: 780px;
+  margin-left: 4vw;
+}
+/* ===========================================================
+   WELCOME BLOCK – ZENTRIERT MIT GOLD-SCHWEIF
+=========================================================== */
+
+/* WELCOME BLOCK – Perfekt zentriert, nur so breit wie der Text */
+.welcome-block {
+  position: relative;
+  display: inline-flex;           /* nur so breit wie Inhalt */
+  justify-content: center;
+  align-items: center;
+  margin: 80px auto 60px;         /* zentriert im Layout */
+}
+
+/* WELCOME TEXT */
+.welcome-title {
+  position: relative;
+  z-index: 2;                     /* über dem Schweif */
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(4rem, 8vw, 7rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;            /* eine schöne, durchgehende Linie */
+
+  background: linear-gradient(
+    180deg,
+    #f8e9c8 0%,
+    #f5d7a1 25%,
+    #e7bb7a 52%,
+    #cfa15e 75%,
+    #ffe8c8 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 0 12px rgba(255, 210, 150, 0.28),
+    0 0 24px rgba(255, 210, 160, 0.25);
+}
+
+/* GOLD-SCHWEIF GENAU HINTER DEM WELCOME TEXT */
+
+/* ===========================================================
+   HERO PANEL MIT LEDER-HINTERGRUND
+=========================================================== */
+
+.hero-panel {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  border-radius: 24px;
+
+  background:
+    linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+    url("leder4.jpg") center center / cover no-repeat;
+
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+  padding: 60px 50px;
+  overflow: hidden;
+}
+
+.hero-panel__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.05) 0%,
+    rgba(0,0,0,0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===========================================================
+   HERO SECTION LAYOUT – ALLES ZENTRIERT
+=========================================================== */
+
+.hero {
+  width: 100%;
+  padding-top: 10px;   /* viel enger */
+}
+
+
+.hero-inner.hero-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* WELCOME + Panel zentriert */
+  gap: 60px;
+}
+/* ===========================================================
+   WELCOME – VOLLE BREITE, SCHMAL & MIT SHINE
+=========================================================== */
+
+/* Container: volle Seitenbreite (innerhalb .page), höher schmaler & nach oben gezogen */
+.welcome-block {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 40px auto 36px;              /* war 80px – jetzt höher Richtung Header */
+  height: clamp(130px, 16vw, 190px);   /* schmaler Goldbalken */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* dunkles, edles Panel hinter dem Flow */
+.welcome-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 0 0, rgba(243, 217, 164, 0.12), transparent 55%),
+    radial-gradient(circle at 100% 120%, rgba(0, 0, 0, 0.9), #050509);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+  z-index: 0;
+}
+
+/* Canvas mit Goldflow füllt den ganzen Balken */
+#goldflow-canvas.welcome-goldflow {
+  position: absolute;
+  inset: 0;                 /* füllt den ganzen Welcome-Balken */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+
+/* WELCOME-Text: mehr Kontrast, Glow & leichter Shine-Effekt */
+.welcome-title {
+  position: relative;
+  z-index: 3;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(4rem, 8vw, 6rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+
+  /* HELLER, EDLER GOLDVERLAUF – wie bei dir */
+  color: #fce9b4;
+  background: linear-gradient(
+    180deg,
+    #fff8e6 0%,
+    #fce9b4 30%,
+    #f3d28a 55%,
+    #e4b96b 75%,
+    #fff1ce 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* NUR HIER geändert: Leder-Outline + dein Glow zusammen */
+  text-shadow:
+    /* feiner Leder-Rand um die Buchstaben */
+    -1px -1px 1px rgba(60, 40, 20, 0.85),
+     1px -1px 1px rgba(60, 40, 20, 0.85),
+    -1px  1px 1px rgba(60, 40, 20, 0.85),
+     1px  1px 1px rgba(60, 40, 20, 0.85),
+
+    /* dein ursprünglicher heller Glow bleibt */
+    0 0 10px rgba(255, 240, 200, 0.9),
+    0 0 16px rgba(255, 230, 180, 1),
+    0 0 28px rgba(255, 215, 160, 0.9);
+
+  /* dein Puls bleibt auch unverändert */
+  animation: goldPulse 4.5s ease-in-out infinite;
+}
+
+@keyframes goldPulse {
+  0%   { text-shadow: 0 0 10px rgba(255,240,200,0.9), 0 0 20px rgba(255,220,170,1); }
+  50%  { text-shadow: 0 0 16px rgba(255,250,220,1), 0 0 32px rgba(255,230,180,1); }
+  100% { text-shadow: 0 0 10px rgba(255,240,200,0.9), 0 0 20px rgba(255,220,170,1); }
+}
+
+
+/* Shine läuft langsam über die Buchstaben */
+@keyframes goldPulseLux {
+  0% {
+    filter: brightness(1) contrast(1);
+    letter-spacing: 0.22em;
+  }
+  25% {
+    filter: brightness(1.08) contrast(1.03);
+  }
+  50% {
+    filter: brightness(1.13) contrast(1.04);
+    letter-spacing: 0.225em; /* ganz leichte Ausdehnung */
+  }
+  75% {
+    filter: brightness(1.06) contrast(1.03);
+  }
+  100% {
+    filter: brightness(1) contrast(1);
+    letter-spacing: 0.22em;
+  }
+}
+/* Grundzustand jeder Letter */
+.welcome-letter {
+  display: inline-block;
+  transition:
+    transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 260ms ease;
+}
+
+/* Apple-Style Hover – CLEAN, LUXUS */
+.welcome-letter:hover {
+  transform: translateY(-6px) scale(1.12);
+  filter: brightness(1.12);
+}
+/* Smooth Luxus-Hover nur für den kompletten WELCOME-Titel */
+.welcome-title {
+  transition:
+    transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 480ms ease,
+    text-shadow 480ms ease;
+  transform-origin: center;
+}
+
+/* Hover: wie Apple-Dock – leicht hoch, minimal größer, klarer */
+.welcome-title:hover {
+  transform: translateY(-4px) scale(1.04);
+  filter: brightness(1.06) contrast(1.03);
+
+  /* etwas stärkerer Glow, damit es „herauspoppt“ */
+  text-shadow:
+    0 0 10px rgba(255, 240, 200, 0.95),
+    0 0 20px rgba(255, 230, 185, 0.95),
+    0 0 32px rgba(255, 215, 160, 0.9);
 }
