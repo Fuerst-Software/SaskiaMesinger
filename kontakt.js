@@ -9,7 +9,7 @@
 
 (() => {
   // FINAL: dein Formspree Endpoint
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/mkogknen";
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqwvnoz";
   const SUBJECT = "saskiamesinger.de Kontakt Formular";
 
   const form = document.getElementById("contactForm");
@@ -186,3 +186,4 @@
     }
   });
 })();
+
