@@ -1016,4 +1016,39 @@ input:focus,select:focus,textarea:focus{
   background-size: cover;
   opacity: 0.55;
 }
+/* ===============================
+   GOLD FLOW – FINAL TUNING
+================================ */
+
+#willkommen{
+  position: relative;
+  overflow: hidden;
+}
+
+#willkommen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+
+  background-image: url("goldfloww.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+
+  /* 🔥 STÄRKER & SICHTBARER */
+  opacity: .38; /* vorher .22 → deutlich sichtbarer */
+  filter:
+    blur(.25px)
+    saturate(1.35)
+    contrast(1.12)
+    brightness(1.08);
+
+  /* Screen war zu schwach → soft-light wirkt edler */
+  mix-blend-mode: soft-light;
+
+  transform: translateY(6px); /* minimal tiefer für Tiefe */
+}
+
 
