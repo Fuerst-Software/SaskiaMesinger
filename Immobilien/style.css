@@ -221,3 +221,137 @@ body::-webkit-scrollbar{ width:0; height:0; }
 @media (prefers-reduced-motion: reduce){
   *{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
 }
+/* =====================================
+   LUX SPACING ADD-ON
+   (für diese CSS-Struktur)
+   ===================================== */
+
+/* 1) Mehr Abstand NACH der Navigation */
+.section + .stack{
+  margin-top: 72px;
+}
+
+/* 2) Stack: deutlich mehr Abstand zwischen allen Content-Blöcken */
+.stack{
+  gap: 64px;            /* vorher 34px */
+  padding-top: 28px;    /* vorher 14px */
+}
+
+/* 3) Mehr Abstand zwischen Titel/Wave und Card */
+.block__head{
+  margin-bottom: 36px;  /* vorher 12px */
+}
+
+/* 4) Cards: mehr Innenabstand */
+.card{
+  padding: 36px;        /* vorher 22px */
+}
+
+/* 5) Text / Prose: luftiger & edler */
+.prose p{
+  line-height: 2.05;
+}
+.prose p + p{
+  margin-top: 26px;     /* vorher 14px */
+}
+
+/* Falls p direkt in .card ohne .prose */
+.card > p + p{
+  margin-top: 26px;
+}
+
+/* 6) Text ↔ Liste Übergänge */
+.card > p + .list,
+.card > .list + p,
+.card > .prose + .list,
+.card > .list + .prose{
+  margin-top: 30px;
+}
+
+/* 7) Listen luftiger */
+.list{
+  gap: 18px;            /* vorher 10px */
+}
+.list li{
+  padding: 18px 18px;   /* vorher 12px */
+  line-height: 1.85;
+}
+
+/* 8) Grid-Karten etwas luftiger */
+.card--mini{
+  padding: 26px;        /* vorher 18px */
+}
+
+/* 9) Scroll-Abstand bei Anchor-Navigation */
+.block{
+  scroll-margin-top: 28px;
+}
+
+/* 10) Mobile-Safe: keine Wort-Zerreißung bei Titeln */
+.title,
+.navgrid__btn{
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* =====================================
+   RESPONSIVE – sauber skaliert
+   ===================================== */
+
+@media (max-width: 900px){
+  .section + .stack{
+    margin-top: 56px;
+  }
+
+  .stack{
+    gap: 52px;
+    padding-top: 24px;
+  }
+
+  .block__head{
+    margin-bottom: 30px;
+  }
+
+  .card{
+    padding: 30px;
+  }
+
+  .prose p + p,
+  .card > p + p{
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 600px){
+  .section + .stack{
+    margin-top: 42px;
+  }
+
+  .stack{
+    gap: 42px;
+    padding-top: 20px;
+  }
+
+  .block__head{
+    margin-bottom: 24px;
+  }
+
+  .card{
+    padding: 24px;
+  }
+
+  .card--mini{
+    padding: 22px;
+  }
+
+  .prose p + p,
+  .card > p + p{
+    margin-top: 20px;
+  }
+
+  .card > p + .list,
+  .card > .list + p{
+    margin-top: 22px;
+  }
+}
