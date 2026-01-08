@@ -283,3 +283,210 @@ input:focus,textarea:focus{
 @media (prefers-reduced-motion: reduce){
   *{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
 }
+/* =========================
+   SPACING TUNING (requested)
+   ========================= */
+
+/* 1) Mehr Abstand NACH der Navigation ("Wohin möchten Sie?") */
+.stack--after-nav{
+  margin-top: 44px; /* Desktop Abstand nach Nav */
+}
+
+/* 2) Mehr Abstand zwischen Überschrift/Wave und Inhalt (Card) */
+.block__head{
+  margin-bottom: 20px; /* vorher 12px */
+}
+
+/* 3) Mehr Luft innerhalb der Cards: Text↔Text / Text↔Liste */
+.card{
+  padding: 26px; /* vorher 22px, wirkt hochwertiger */
+}
+
+/* Text generell etwas luftiger */
+.text{
+  line-height: 1.95; /* vorher 1.85 */
+}
+
+/* Wenn innerhalb einer Card mehrere Blöcke kommen: Abstand automatisch */
+.card > .text + .text{
+  margin-top: 16px;
+}
+.card > .text + .list{
+  margin-top: 18px;
+}
+.card > .list + .text{
+  margin-top: 18px;
+}
+
+/* 4) Du nutzt <br><br> in einem <p>:
+      -> wir geben den <br> in .text etwas "Spacing-Charakter"
+      -> verhindert “zusammengequetscht”, bleibt responsive stabil */
+.text br{
+  content:"";
+}
+.text br + br{
+  display:block;
+  margin-top: 14px;  /* Abstand bei <br><br> */
+}
+
+/* 5) Überschriften NICHT mitten im Wort umbrechen (Mobile Fix) */
+.title,
+.navgrid__btn{
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* Optional: falls irgendwo global overflow-wrap: anywhere aktiv wäre,
+   halten wir bei Titeln das sauber. */
+.title{
+  white-space: normal;
+}
+
+/* =========================
+   Responsive Feintuning
+   ========================= */
+@media (max-width: 900px){
+  .stack--after-nav{
+    margin-top: 34px;
+  }
+  .block__head{
+    margin-bottom: 18px;
+  }
+}
+
+@media (max-width: 600px){
+  .stack--after-nav{
+    margin-top: 26px; /* Mobile: nicht zu riesig, aber sichtbar */
+  }
+  .block__head{
+    margin-bottom: 16px;
+  }
+  .card{
+    padding: 20px;
+  }
+  .card > .text + .text{
+    margin-top: 14px;
+  }
+  .card > .text + .list,
+  .card > .list + .text{
+    margin-top: 16px;
+  }
+  .text br + br{
+    margin-top: 12px;
+  }
+}
+/* =====================================
+   EXTRA SPACING – FINAL TUNING
+   ===================================== */
+
+/* 1) Deutlich mehr Abstand NACH der Navigation */
+.stack--after-nav{
+  margin-top: 70px;
+}
+
+/* 2) Mehr Abstand zwischen Überschrift/Wave und Inhalt */
+.block__head{
+  margin-bottom: 34px;
+}
+
+/* 3) Mehr Abstand zwischen den einzelnen Content-Blöcken */
+.stack{
+  gap: 64px;
+}
+
+/* 4) Cards: mehr Innenluft */
+.card{
+  padding: 34px;
+}
+
+/* 5) Text: deutlich mehr Abstand zwischen Absätzen */
+.text{
+  line-height: 2.05;
+}
+
+/* Absatz-zu-Absatz */
+.card > .text + .text{
+  margin-top: 26px;
+}
+
+/* Text zu Liste / Liste zu Text */
+.card > .text + .list,
+.card > .list + .text{
+  margin-top: 28px;
+}
+
+/* 6) <br><br> sichtbar als echter Absatzabstand */
+.text br + br{
+  display:block;
+  margin-top: 26px;
+}
+
+/* 7) Listen luftiger */
+.list{
+  gap: 18px;
+}
+.list li{
+  padding: 18px 18px;
+}
+
+/* 8) Sicherstellen: KEIN Wortbruch bei Überschriften (Mobile Safe) */
+.title,
+.navgrid__btn{
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* =====================================
+   RESPONSIVE – Abstand sauber skalieren
+   ===================================== */
+
+@media (max-width: 900px){
+  .stack--after-nav{
+    margin-top: 56px;
+  }
+
+  .stack{
+    gap: 52px;
+  }
+
+  .block__head{
+    margin-bottom: 28px;
+  }
+
+  .card{
+    padding: 28px;
+  }
+}
+
+@media (max-width: 600px){
+  .stack--after-nav{
+    margin-top: 42px;
+  }
+
+  .stack{
+    gap: 42px;
+  }
+
+  .block__head{
+    margin-bottom: 24px;
+  }
+
+  .card{
+    padding: 24px;
+  }
+
+  .card > .text + .text{
+    margin-top: 22px;
+  }
+
+  .card > .text + .list,
+  .card > .list + .text{
+    margin-top: 24px;
+  }
+
+  .text br + br{
+    margin-top: 20px;
+  }
+}
