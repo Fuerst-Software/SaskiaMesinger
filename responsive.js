@@ -352,3 +352,54 @@
   window.addEventListener("DOMContentLoaded", applyMobileFixes);
   window.addEventListener("resize", applyMobileFixes, { passive: true });
 })();
+/* ============================================================
+   FIX: "Saskia Mesinger" auf Mobile immer 2-zeilig (Saskia / Mesinger)
+   ============================================================ */
+(function () {
+  "use strict";
+
+  const BP = 600;
+
+  function findElementWithText(regex) {
+    // Kandidaten: typische Stellen für Brand-Text
+    const candidates = [
+      ...document.querySelectorAll("header, nav, .site-header, .topbar, .navbar, a, span, div, p, h1, h2, h3")
+    ];
+
+    // Nur die, die wirklich Text haben und keine großen Container sind
+    return candidates.find(el => {
+      const t = (el.textContent || "").trim();
+      if (!t) return false;
+
+      // Nicht ganze Nav-Menüs erwischen
+      if (t.length > 60) return false;
+
+      return regex.test(t);
+    });
+  }
+
+  function applyBrandLineBreak() {
+    const isMobile = window.matchMedia(`(max-width:${BP}px)`).matches;
+    if (!isMobile) return;
+
+    // Element finden, das "Saskia Mesinger" enthält
+    const el = findElementWithText(/saskia\s+mesinger/i);
+    if (!el) return;
+
+    // Worttrennung komplett aus
+    el.style.hyphens = "none";
+    el.style.webkitHyphens = "none";
+    el.style.msHyphens = "none";
+    el.style.wordBreak = "normal";
+    el.style.overflowWrap = "normal";
+
+    // Erzwinge exakt 2 Zeilen
+    el.innerHTML = "Saskia<br>Mesinger";
+    el.style.whiteSpace = "normal";
+    el.style.lineHeight = "1.05";
+  }
+
+  // laufen lassen sobald DOM da ist + bei Resize
+  window.addEventListener("DOMContentLoaded", applyBrandLineBreak);
+  window.addEventListener("resize", applyBrandLineBreak, { passive: true });
+})();
