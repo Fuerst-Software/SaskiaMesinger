@@ -288,3 +288,144 @@ body::-webkit-scrollbar{ width:0; height:0; }
 @media (prefers-reduced-motion: reduce){
   *{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
 }
+/* =====================================
+   LUX SPACING ADD-ON (für diese CSS)
+   -> ganz unten anfügen
+   ===================================== */
+
+/* 1) Mehr Abstand NACH der Navigation */
+.section + .stack{
+  margin-top: 72px;
+}
+
+/* 2) Stack: deutlich mehr Abstand zwischen Blocks */
+.stack{
+  gap: 64px;          /* vorher 34px */
+  padding-top: 28px;  /* vorher 14px */
+}
+
+/* 3) Head (Titel/Wave) weiter weg von der Card */
+.block__head{
+  margin-bottom: 36px; /* vorher 12px */
+}
+
+/* 4) Cards: mehr Innenluft */
+.card{
+  padding: 36px;       /* vorher 22px */
+}
+
+/* 5) Prose / Text: luftiger + größere Absatzabstände */
+.prose p{
+  line-height: 2.05;   /* vorher 1.9 */
+}
+.prose p + p{
+  margin-top: 26px;    /* vorher 14px */
+}
+
+/* Falls .text mit <br><br> genutzt wird: als echten Absatzabstand behandeln */
+.text{
+  line-height: 2.05;   /* vorher 1.85 */
+}
+.text br + br{
+  display:block;
+  margin-top: 24px;
+}
+
+/* 6) Grid-Karten ebenfalls luftiger */
+.card--mini{
+  padding: 26px;       /* vorher 18px */
+}
+
+/* 7) Lists: mehr Abstand & bessere “Lux”-Luft in Items */
+.list{
+  gap: 18px;           /* vorher 10px */
+}
+.list li{
+  padding: 18px 18px;  /* vorher 12px */
+  line-height: 1.85;
+}
+
+/* 8) Chips: optisch nicht zu gedrängt (optional, aber passend) */
+.chips{
+  margin-top: 22px;    /* vorher 14px */
+  gap: 12px;           /* vorher 10px */
+}
+
+/* 9) Anchor-Scroll angenehmer */
+.block{
+  scroll-margin-top: 28px;
+}
+
+/* 10) Mobile Safe: keine Wort-Zerreißung bei Titeln & Nav Buttons */
+.title,
+.navgrid__btn{
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* =====================================
+   RESPONSIVE – sauber skaliert
+   ===================================== */
+
+@media (max-width: 900px){
+  .section + .stack{
+    margin-top: 56px;
+  }
+
+  .stack{
+    gap: 52px;
+    padding-top: 24px;
+  }
+
+  .block__head{
+    margin-bottom: 30px;
+  }
+
+  .card{
+    padding: 30px;
+  }
+
+  .card--mini{
+    padding: 22px;
+  }
+
+  .prose p + p{
+    margin-top: 22px;
+  }
+
+  .text br + br{
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px){
+  .section + .stack{
+    margin-top: 42px;
+  }
+
+  .stack{
+    gap: 42px;
+    padding-top: 20px;
+  }
+
+  .block__head{
+    margin-bottom: 24px;
+  }
+
+  .card{
+    padding: 24px;
+  }
+
+  .card--mini{
+    padding: 20px;
+  }
+
+  .prose p + p{
+    margin-top: 20px;
+  }
+
+  .text br + br{
+    margin-top: 18px;
+  }
+}
