@@ -359,32 +359,36 @@
   "use strict";
 
   const BP = 600;
+  const REGEX = /saskia\s+mesinger/i;
+
+  function isMobile() {
+    return window.matchMedia(`(max-width:${BP}px)`).matches;
+  }
 
   function findElementWithText(regex) {
     // Kandidaten: typische Stellen für Brand-Text
-    const candidates = [
-      ...document.querySelectorAll("header, nav, .site-header, .topbar, .navbar, a, span, div, p, h1, h2, h3")
-    ];
+    const candidates = document.querySelectorAll(
+      "header, nav, .site-header, .topbar, .navbar, a, span, div, p, h1, h2, h3"
+    );
 
-    // Nur die, die wirklich Text haben und keine großen Container sind
-    return candidates.find(el => {
+    for (const el of candidates) {
       const t = (el.textContent || "").trim();
-      if (!t) return false;
-
-      // Nicht ganze Nav-Menüs erwischen
-      if (t.length > 60) return false;
-
-      return regex.test(t);
-    });
+      if (!t) continue;
+      if (t.length > 60) continue;      // keine großen Container
+      if (!regex.test(t)) continue;
+      return el;
+    }
+    return null;
   }
 
   function applyBrandLineBreak() {
-    const isMobile = window.matchMedia(`(max-width:${BP}px)`).matches;
-    if (!isMobile) return;
+    if (!isMobile()) return;
 
-    // Element finden, das "Saskia Mesinger" enthält
-    const el = findElementWithText(/saskia\s+mesinger/i);
+    const el = findElementWithText(REGEX);
     if (!el) return;
+
+    // Wenn schon umgebaut -> nicht ständig neu schreiben
+    if (el.dataset && el.dataset.smFixed === "1") return;
 
     // Worttrennung komplett aus
     el.style.hyphens = "none";
@@ -397,9 +401,36 @@
     el.innerHTML = "Saskia<br>Mesinger";
     el.style.whiteSpace = "normal";
     el.style.lineHeight = "1.05";
+
+    // Marker setzen
+    if (el.dataset) el.dataset.smFixed = "1";
   }
 
-  // laufen lassen sobald DOM da ist + bei Resize
-  window.addEventListener("DOMContentLoaded", applyBrandLineBreak);
-  window.addEventListener("resize", applyBrandLineBreak, { passive: true });
+  // 1) SOFORT versuchen (beim ersten Script-Run)
+  applyBrandLineBreak();
+
+  // 2) nochmal sobald DOM ready
+  document.addEventListener("DOMContentLoaded", applyBrandLineBreak, { passive: true });
+
+  // 3) nochmal wenn alles geladen ist (Fonts/Images/weitere JS)
+  window.addEventListener("load", applyBrandLineBreak, { passive: true });
+
+  // 4) bei Resize
+  window.addEventListener("resize", () => {
+    // Falls von Desktop -> Mobile gewechselt wird, Marker entfernen, damit es neu greift
+    const el = findElementWithText(/saskia/i);
+    if (el && el.dataset) el.dataset.smFixed = "";
+    applyBrandLineBreak();
+  }, { passive: true });
+
+  // 5) MutationObserver: falls Header/Nav später per JS geändert wird
+  const root = document.querySelector("header") || document.body;
+  const mo = new MutationObserver(() => {
+    applyBrandLineBreak();
+  });
+
+  mo.observe(root, { subtree: true, childList: true, characterData: true });
+
+  // Optional: Observer nach kurzer Zeit stoppen (Performance sauber)
+  setTimeout(() => mo.disconnect(), 6000);
 })();
