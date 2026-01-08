@@ -1044,6 +1044,103 @@ input:focus,select:focus,textarea:focus{
   filter: blur(.30px) saturate(1.28) contrast(1.10) brightness(1.05);
   mix-blend-mode: screen;
 }
+/* ===========================================================
+   HEADER BRAND LOGO (LogoSM.png statt Text)
+=========================================================== */
 
+.lux-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  line-height:0;            /* verhindert „extra“ Höhe durch inline img */
+  min-height: 52px;         /* saubere Header-Höhe */
+}
+
+.lux-brand-logo{
+  display:block;
+
+  /* Kern: responsive, aber nie zu groß */
+  height: clamp(38px, 4.2vw, 54px);
+  width: auto;
+
+  /* Optik: clean + high-end */
+  filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
+  transform: translateZ(0);
+  image-rendering: auto;
+}
+
+/* Hover sehr dezent, nicht kitschig */
+.lux-brand:hover .lux-brand-logo{
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.62));
+}
+
+/* Mobile: etwas kompakter */
+@media (max-width: 900px){
+  .lux-brand-logo{
+    height: 44px;
+  }
+}
+/* ===========================================================
+   BRAND LOGO – größer, besser lesbar, abgerundet, perfekt integriert
+=========================================================== */
+
+.lux-brand{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+  line-height:0;
+}
+
+/* Die „Plakette“ um das Logo (macht es lesbar auf dunklem Header) */
+.lux-brand-logo{
+  display:block;
+
+  /* Größer + responsive */
+  height: clamp(46px, 5vw, 68px);
+  width: auto;
+
+  /* Abgerundet */
+  border-radius: 16px;
+
+  /* Hintergrund passend zum Theme (edel / dark / slight leather vibe) */
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.35), rgba(0,0,0,.72)),
+    radial-gradient(circle at 20% 10%, rgba(255,211,106,.10), transparent 55%),
+    url("img/leder.jpg") center/cover no-repeat;
+
+  /* Innenabstand, damit das Logo nicht „klebt“ */
+  padding: 10px 14px;
+
+  /* Goldkante + Glass */
+  border: 1px solid rgba(255,211,106,.42);
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.70),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 18px rgba(255,211,106,.10);
+
+  /* Lesbarkeit/Pop (sehr dezent, nicht kitschig) */
+  filter: saturate(1.06) contrast(1.06);
+  backdrop-filter: blur(6px);
+}
+
+/* Hover: minimal mehr Präsenz */
+.lux-brand:hover .lux-brand-logo{
+  transform: translateY(-1px);
+  border-color: rgba(255,211,106,.62);
+  box-shadow:
+    0 22px 52px rgba(0,0,0,.78),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 0 22px rgba(255,211,106,.14);
+}
+
+/* Mobile: noch immer groß genug, aber header-friendly */
+@media (max-width: 900px){
+  .lux-brand-logo{
+    height: 56px;
+    border-radius: 14px;
+    padding: 9px 12px;
+  }
+}
 
 
