@@ -295,10 +295,44 @@ h1,h2,h3,
   pointer-events:none;
   z-index:1;
 
-  background: url("goldfloww.png") center center / 100% 100% no-repeat;
+/* Goldflow preload img unsichtbar halten */
+.goldflow-preload{
+  position:absolute;
+  width:1px; height:1px;
+  opacity:0;
+  pointer-events:none;
+  left:-9999px;
+}
+
+/* Dein Goldflow-Layer (hier Beispiel: passe Selector an dein Element an!) */
+#willkommen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+
+  /* 1) Beste Praxis: image-set + Fallbacks */
+  background-image:
+    image-set(
+      url("/img/goldfloww.png") 1x,
+      url("/img/goldfloww.png") 2x
+    );
+  /* Fallback, falls image-set nicht greift */
+  background-image:
+    url("/img/goldfloww.png"),
+    url("img/goldfloww.png"),
+    url("goldfloww.png");
+
+  background-position:center center;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+
   opacity:.22;
   filter: blur(.35px) saturate(1.15) contrast(1.06);
   mix-blend-mode: screen;
+}
+
 }
 .welcome-title{
   position:relative;
@@ -982,3 +1016,4 @@ input:focus,select:focus,textarea:focus{
   background-size: cover;
   opacity: 0.55;
 }
+
