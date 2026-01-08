@@ -1016,39 +1016,34 @@ input:focus,select:focus,textarea:focus{
   background-size: cover;
   opacity: 0.55;
 }
-/* ===============================
-   GOLD FLOW – FINAL TUNING
-================================ */
-
-#willkommen{
-  position: relative;
-  overflow: hidden;
+.welcome-inline{
+  position: relative; /* wichtig für ::before */
 }
 
-#willkommen::before{
+.welcome-inline::before{
   content:"";
   position:absolute;
-  inset:0;
-  z-index:-1;
+  left:0; right:0;
+  top:50%;
+  transform: translateY(-50%);
+  height: clamp(90px, 9vw, 140px);
   pointer-events:none;
+  z-index:1;
 
-  background-image: url("goldfloww.png");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
+  /* GitHub Pages safe + Fallback */
+  background-image:
+    url("/img/goldfloww.png"),
+    url("img/goldfloww.png"),
+    url("goldfloww.png");
+  background-position:center center;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
 
-  /* 🔥 STÄRKER & SICHTBARER */
-  opacity: .38; /* vorher .22 → deutlich sichtbarer */
-  filter:
-    blur(.25px)
-    saturate(1.35)
-    contrast(1.12)
-    brightness(1.08);
-
-  /* Screen war zu schwach → soft-light wirkt edler */
-  mix-blend-mode: soft-light;
-
-  transform: translateY(6px); /* minimal tiefer für Tiefe */
+  /* minimal stärker, aber gleicher Look wie früher */
+  opacity:.34; /* vorher .22 */
+  filter: blur(.30px) saturate(1.28) contrast(1.10) brightness(1.05);
+  mix-blend-mode: screen;
 }
+
 
 
