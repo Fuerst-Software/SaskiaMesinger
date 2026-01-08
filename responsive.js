@@ -294,3 +294,61 @@
   window.addEventListener('resize', enableOverlayScroll, { passive: true });
   window.addEventListener('orientationchange', enableOverlayScroll, { passive: true });
 })();
+/* ============================================================
+   responsive.js — Mobile Worttrennung Fix (Saskia Mesinger + Willkommen)
+   ============================================================ */
+
+(function () {
+  "use strict";
+
+  function applyMobileFixes() {
+    const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+    // Elemente finden (bitte ggf. Selector anpassen, falls dein Logo anders heißt)
+    const brand = document.querySelector(".brand, .logo, .site-brand, .nav-brand, .header-brand, .brandmark");
+    const brandTitle = document.querySelector(".brand-title, .logo-title, .brand__title, .site-title");
+    const heroTitle = document.getElementById("hero-title");
+
+    // 1) Worttrennung generell verhindern (gegen Saskia Mesin-ger / Willkom-men)
+    const targets = [brand, brandTitle, heroTitle].filter(Boolean);
+    targets.forEach((el) => {
+      el.style.hyphens = "none";
+      el.style.webkitHyphens = "none";
+      el.style.msHyphens = "none";
+      el.style.wordBreak = "normal";
+      el.style.overflowWrap = "normal";
+      el.style.whiteSpace = "normal";
+    });
+
+    // 2) „Saskia Mesinger“ auf Mobile gezielt 2-zeilig machen
+    //    (Nur wenn wir ein Brand-Element haben und es auch wirklich "Saskia Mesinger" enthält)
+    if (isMobile && (brandTitle || brand)) {
+      const el = brandTitle || brand;
+      const text = (el.textContent || "").trim();
+
+      // Nur eingreifen, wenn es wirklich um Saskia Mesinger geht
+      if (/saskia\s+mesinger/i.test(text)) {
+        // HTML sicher setzen (nur Text, kein fremder Input)
+        el.innerHTML = "Saskia<br>Mesinger";
+        el.style.lineHeight = "1.05";
+      }
+    }
+
+    // 3) „WILLKOMMEN“ skalieren, sodass es auf Mobile nicht getrennt wird
+    if (heroTitle) {
+      // Kein Trennen, immer am Stück
+      heroTitle.style.whiteSpace = "nowrap";
+      heroTitle.style.wordBreak = "keep-all";
+
+      // Font-size dynamisch klein genug halten (ohne abzuschneiden)
+      // clamp(min, preferred, max)
+      heroTitle.style.fontSize = isMobile ? "clamp(1.6rem, 10vw, 3.2rem)" : "";
+      heroTitle.style.letterSpacing = isMobile ? "clamp(.14em, 1.6vw, .26em)" : "";
+      heroTitle.style.maxWidth = "100%";
+    }
+  }
+
+  // Initial + on resize/orientation
+  window.addEventListener("DOMContentLoaded", applyMobileFixes);
+  window.addEventListener("resize", applyMobileFixes, { passive: true });
+})();
