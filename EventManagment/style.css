@@ -287,3 +287,141 @@ input:focus,textarea:focus{
 @media (prefers-reduced-motion: reduce){
   *{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
 }
+
+/* =====================================
+   LUX SPACING ADD-ON (EVENTMANAGEMENT)
+   -> ganz unten anfügen
+   ===================================== */
+
+/* 1) Mehr Abstand NACH der NAV-Section */
+.section + .stack{
+  margin-top: 72px;
+}
+
+/* 2) Stack: mehr Abstand zwischen den einzelnen Blocks */
+.stack{
+  gap: 64px;          /* vorher 34px */
+  padding-top: 28px;  /* vorher 14px */
+}
+
+/* 3) Head (Titel + Wave) weiter weg von der Card */
+.block__head{
+  margin-bottom: 36px; /* vorher 12px */
+}
+
+/* 4) Cards: mehr Innenluft */
+.card{
+  padding: 36px;       /* vorher 22px */
+}
+
+/* 5) Text: luftiger + Abstand zwischen Text-Elementen */
+.text{
+  line-height: 2.05;   /* vorher 1.85 */
+}
+
+/* Wenn mehrere .text in einer Card vorkommen */
+.card > .text + .text{
+  margin-top: 26px;
+}
+
+/* Text ↔ Liste Übergänge */
+.card > .text + .list,
+.card > .list + .text{
+  margin-top: 30px;
+}
+
+/* Falls du <br><br> in einem .text nutzt: als echten Absatzabstand behandeln */
+.text br + br{
+  display:block;
+  margin-top: 24px;
+}
+
+/* 6) Listen luftiger */
+.list{
+  gap: 18px;           /* vorher 10px */
+}
+.list li{
+  padding: 18px 18px;  /* vorher 12px */
+  line-height: 1.85;
+}
+
+/* 7) Anchor/Scroll angenehmer */
+.block{
+  scroll-margin-top: 28px;
+}
+
+/* 8) Mobile Safe: nicht mitten im Wort umbrechen (Titel + Nav Buttons) */
+.title,
+.navgrid__btn{
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* =====================================
+   RESPONSIVE – sauber skaliert
+   ===================================== */
+
+@media (max-width: 900px){
+  .section + .stack{
+    margin-top: 56px;
+  }
+
+  .stack{
+    gap: 52px;
+    padding-top: 24px;
+  }
+
+  .block__head{
+    margin-bottom: 30px;
+  }
+
+  .card{
+    padding: 30px;
+  }
+
+  .card > .text + .text{
+    margin-top: 22px;
+  }
+
+  .card > .text + .list,
+  .card > .list + .text{
+    margin-top: 26px;
+  }
+
+  .text br + br{
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px){
+  .section + .stack{
+    margin-top: 42px;
+  }
+
+  .stack{
+    gap: 42px;
+    padding-top: 20px;
+  }
+
+  .block__head{
+    margin-bottom: 24px;
+  }
+
+  .card{
+    padding: 24px;
+  }
+
+  .card > .text + .text{
+    margin-top: 20px;
+  }
+
+  .card > .text + .list,
+  .card > .list + .text{
+    margin-top: 22px;
+  }
+
+  .text br + br{
+    margin-top: 18px;
+  }
+}
