@@ -1,160 +1,310 @@
-// ================================
-// Kundenstimmen – echte Stimmen
-// ================================
+:root{
+  --gold2:#f1c75c; --gold3:#ffd979;
+  --t:#f7f2eb; --t2:#cfc6bb; --t3:#8b847c;
 
-// Data (NUR echte Stimmen)
-const TESTIMONIALS = [
-  {
-    name: "Kadir Türker",
-    company: "",
-    project: "Lexware / Buchhaltung",
-    category: "Lexware / Buchhaltung",
-    date: "",
-    quote:
-`Frau Mesinger beherrscht die Buchhaltungssoftware Lexware sehr gut und verfügt über fundierte Fachkenntnisse in der Buchhaltung.
-Sie arbeitet äußerst kompetent, geduldig und erklärt jeden einzelnen Schritt ruhig und verständlich.
+  --shadow:0 22px 60px rgba(0,0,0,.82);
+  --shadow2:0 14px 36px rgba(0,0,0,.78);
 
-Die Zusammenarbeit mit ihr ist sehr angenehm und effektiv.
-Ich bin sehr froh, mit ihr zusammenzuarbeiten, und kann sie uneingeschränkt weiterempfehlen.`
-  },
-  {
-    name: "Lara Nasser",
-    company: "",
-    project: "Lexware Hilfe",
-    category: "Lexware / Buchhaltung",
-    date: "",
-    quote:
-`Sehr nette Dame – sie konnte mir bei Lexware gut weiterhelfen.
-Jetzt kann ich endlich meine Rechnung schreiben.
+  --fast:150ms ease-out; --med:260ms ease-out;
 
-Kann ich nur weiter empfehlen 👍`
-  },
-  {
-    name: "Stefanie Gralewski",
-    company: "",
-    project: "Zusammenarbeit",
-    category: "Zusammenarbeit",
-    date: "",
-    quote:
-`Wow! Das lief richtig gut!
-
-Danke Saskia, für die tolle Zusammenarbeit.
-Faires Angebot, super schnelle und qualitativ sehr hochwertige Arbeit, dazu unglaublich nett.
-
-Wir melden uns ganz sicher mit weiteren Aufträgen.`
-  }
-];
-
-// Elements
-const grid = document.getElementById('testimonialsGrid');
-const empty = document.getElementById('emptyState');
-const countPill = document.getElementById('countPill');
-const searchInput = document.getElementById('searchInput');
-const categorySelect = document.getElementById('categorySelect');
-
-function esc(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='220' viewBox='0 0 1600 220'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23ffd979' stop-opacity='.12'/%3E%3Cstop offset='.35' stop-color='%23ffd979' stop-opacity='.75'/%3E%3Cstop offset='.65' stop-color='%23ffd979' stop-opacity='.75'/%3E%3Cstop offset='1' stop-color='%23ffd979' stop-opacity='.12'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M40 125 C 260 70, 420 180, 650 122 S 1100 70, 1560 110' fill='none' stroke='url(%23g)' stroke-width='10' stroke-linecap='round'/%3E%3Cpath d='M40 125 C 260 70, 420 180, 650 122 S 1100 70, 1560 110' fill='none' stroke='%23ffffff' stroke-opacity='.10' stroke-width='18' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-function normalize(s){ return String(s ?? "").toLowerCase().trim(); }
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
 
-function formatDate(iso){
-  if(!iso) return "";
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  if(!m) return iso;
-  return `${m[3]}.${m[2]}.${m[1]}`;
+body{
+  background: radial-gradient(circle at top, #070a12 0%, #02030a 55%, #010107 100%);
+  color:var(--t);
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body{ scrollbar-width:none; -ms-overflow-style:none; }
+body::-webkit-scrollbar{ width:0; height:0; }
+
+.page{ max-width:1280px; margin:0 auto; padding:34px 32px 64px; }
+
+/* Type */
+.title,.kicker{ font-family:"Cormorant Garamond","Times New Roman",serif; }
+.title{ margin:0; letter-spacing:.10em; color:var(--gold3); }
+.title--xl{
+  font-size: clamp(3.0rem, 7vw, 5.4rem);
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(255,211,106,.12),0 0 22px rgba(255,211,106,.10);
+}
+.kicker{
+  margin:0 0 8px;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.24em;
+  color: rgba(255,211,106,.92);
 }
 
-function matches(t, q, cat){
-  const hay = [t.name, t.company, t.category, t.project, t.quote].map(normalize).join(" ");
-  const okQ = !q || hay.includes(q);
-  const okC = !cat || normalize(t.category) === normalize(cat);
-  return okQ && okC;
+/* Scrollbar */
+.scrollbar{ position:fixed; inset:0 0 auto; height:3px; z-index:1000; pointer-events:none; }
+.scrollbar__fill{
+  height:3px; width:0;
+  background:linear-gradient(90deg,var(--gold2),var(--gold3));
+  box-shadow:0 0 15px rgba(255,211,106,.65);
 }
 
-function render(list){
-  if (!grid) return;
+/* Hero */
+.hero{ padding:10px 0 24px; text-align:center; }
+.hero__title{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.hero__actions{ margin-top:8px; display:flex; justify-content:center; }
 
-  grid.innerHTML = list.map(t => {
-    const name = esc(t.name || "Anonym");
-    const subParts = [t.company, t.project].filter(Boolean).map(esc);
-    const sub = subParts.length ? subParts.join(" • ") : "—";
-    const tag = t.category ? `<span class="tag">${esc(t.category)}</span>` : `<span class="tag">Feedback</span>`;
-    const date = t.date ? esc(formatDate(t.date)) : "";
-    const link = (t.linkText && t.linkUrl)
-      ? `<a class="tcard__link" href="${esc(t.linkUrl)}">${esc(t.linkText)}</a>`
-      : "";
+/* Wave */
+.wave{
+  width:min(1200px,100%);
+  height:56px;
+  background:var(--wave) center/100% 100% no-repeat;
+  opacity:.9;
+  pointer-events:none;
+  filter:saturate(1.05) contrast(1.05);
+}
+.wave--hero{ height:68px; opacity:.95; }
 
-    const quoteHtml = String(t.quote || "")
-      .split("\n")
-      .map(line => line.trim())
-      .filter(Boolean)
-      .map(p => `<p>${esc(p)}</p>`)
-      .join("");
+/* Sections */
+.section{ padding:46px 0 0; }
+.section__head{ max-width:820px; margin:0 auto 18px; text-align:center; }
 
-    return `
-      <article class="tcard">
-        <div class="tcard__top">
-          <div class="tcard__meta">
-            <h3 class="tcard__name">${name}</h3>
-            <p class="tcard__sub">${sub}</p>
-          </div>
-          ${tag}
-        </div>
+/* Card */
+.card{
+  max-width:980px;
+  margin:0 auto;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(140deg, rgba(0,0,0,.60), rgba(0,0,0,.92));
+  box-shadow:var(--shadow);
+  padding:36px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 0 0, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(circle at 100% 120%, rgba(0,0,0,.55), transparent 55%);
+  mix-blend-mode:soft-light;
+  pointer-events:none;
+}
+.card > *{ position:relative; z-index:1; }
 
-        <div class="tcard__quote">${quoteHtml}</div>
+/* Prose */
+.prose p{ margin:0; color:var(--t2); line-height:2.05; }
+.prose p + p{ margin-top:26px; }
 
-        <div class="tcard__foot">
-          <span>${date}</span>
-          <span>${link}</span>
-        </div>
-      </article>
-    `;
-  }).join("");
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 26px;
+  border-radius:999px;
+  border:1px solid rgba(255,211,106,.62);
+  text-decoration:none;
+  color:#fdf5ee;
+  background: linear-gradient(145deg, rgba(0,0,0,.55), rgba(0,0,0,.92));
+  box-shadow:0 16px 34px rgba(0,0,0,.78);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-size:.78rem;
+  transition: transform var(--fast), box-shadow var(--fast), filter var(--fast), border-color var(--fast);
+}
+.btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold3);
+  filter:brightness(1.04);
+  box-shadow:0 22px 40px rgba(0,0,0,.88);
+}
+.btn--ghost{ color:var(--gold3); background: linear-gradient(145deg, rgba(2,3,8,.35), rgba(2,3,8,.88)); }
+.btn--mini{ padding:6px 14px; font-size:.7rem; letter-spacing:.16em; box-shadow:0 10px 20px rgba(0,0,0,.75); }
 
-  const n = list.length;
-  if (countPill) countPill.textContent = `${n} ${n === 1 ? "Eintrag" : "Einträge"}`;
+/* Footer */
+.footer{
+  margin-top:44px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.16);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  color:var(--t3);
+  font-size:.8rem;
+}
+.footer__links{ display:flex; gap:8px; flex-wrap:wrap; }
 
-  // Empty-State: nur anzeigen wenn insgesamt KEINE Testimonials existieren
-  if (empty) empty.style.display = (TESTIMONIALS.length === 0) ? "block" : "none";
+/* Reveal */
+.reveal{ opacity:0; transform: translateY(18px); transition: opacity 520ms ease-out, transform 520ms ease-out; }
+.reveal.in{ opacity:1; transform: translateY(0); }
+
+/* Toolbar */
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.toolbar__left{ display:flex; gap:14px; flex-wrap:wrap; }
+.field{ display:flex; flex-direction:column; gap:6px; min-width:240px; }
+.field__label{
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.field__input{
+  height:42px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(5,6,10,.60);
+  color:var(--t);
+  padding:0 12px;
+  outline:none;
+}
+.field__input:focus{
+  border-color: rgba(255,211,106,.75);
+  box-shadow: 0 0 0 1px rgba(255,211,106,.35);
+}
+.pill{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,211,106,.22);
+  background: rgba(3,5,10,.42);
+  color:var(--t2);
+  letter-spacing:.08em;
 }
 
-function applyFilters(){
-  const q = normalize(searchInput?.value);
-  const cat = categorySelect?.value || "";
-  const filtered = TESTIMONIALS.filter(t => matches(t, q, cat));
-  render(filtered);
+/* Testimonials Grid */
+.grid{ max-width:980px; margin:18px auto 0; display:grid; gap:16px; }
+.grid--3{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+
+@media (max-width: 980px){
+  .grid--3{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 720px){
+  .grid--3{ grid-template-columns: 1fr; }
 }
 
-if (searchInput) searchInput.addEventListener('input', applyFilters);
-if (categorySelect) categorySelect.addEventListener('change', applyFilters);
-
-// Initial
-render(TESTIMONIALS);
-
-// ================================
-// Scrollbar + Year + Reveal
-// ================================
-const fill = document.getElementById('scrollFill');
-const year = document.getElementById('year');
-if (year) year.textContent = new Date().getFullYear();
-
-function onScroll(){
-  const h = document.documentElement;
-  const max = (h.scrollHeight - h.clientHeight) || 1;
-  const p = (h.scrollTop / max) * 100;
-  if (fill) fill.style.width = p + "%";
+/* Testimonial card */
+.tcard{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(3,5,10,.46);
+  padding:18px;
+  position:relative;
+  overflow:hidden;
 }
-window.addEventListener('scroll', onScroll, { passive:true });
-onScroll();
+.tcard::before{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 0 0, rgba(255,255,255,.10), transparent 60%);
+  mix-blend-mode:soft-light;
+  pointer-events:none;
+}
+.tcard > *{ position:relative; z-index:1; }
 
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e => e.target.classList.toggle('in', e.isIntersecting));
-}, { threshold: 0.14 });
+.tcard__top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.tcard__meta{ display:flex; flex-direction:column; gap:4px; }
+.tcard__name{
+  color:var(--gold3);
+  font-family:"Cormorant Garamond",serif;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  margin:0;
+}
+.tcard__sub{
+  margin:0;
+  color:var(--t3);
+  font-size:.86rem;
+  line-height:1.5;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  height:26px;
+  padding:0 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,211,106,.20);
+  background: rgba(3,5,10,.40);
+  color:var(--t2);
+  font-size:.72rem;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+.tcard__quote{
+  margin-top:12px;
+  color:var(--t2);
+  line-height:1.85;
+}
+.tcard__quote p{ margin:0; }
+.tcard__quote p + p{ margin-top:12px; }
+.tcard__foot{
+  margin-top:14px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  color:var(--t3);
+  font-size:.78rem;
+}
+.tcard__link{
+  color:var(--gold3);
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,211,106,.35);
+}
+.tcard__link:hover{ border-bottom-color: rgba(255,211,106,.8); }
 
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+/* Chips */
+.chips{ margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+.chip{
+  height:28px;
+  display:inline-flex;
+  align-items:center;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(3,5,10,.40);
+  color:var(--t2);
+  letter-spacing:.08em;
+  font-size:.78rem;
+}
+
+/* Empty */
+.empty{ margin-top:16px; }
+.empty__inner{ max-width:820px; margin:0 auto; text-align:center; }
+.empty__badge{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,211,106,.20);
+  background: rgba(3,5,10,.40);
+  color:var(--t2);
+  letter-spacing:.08em;
+  margin-bottom:12px;
+}
+.empty__actions{ margin-top:14px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+
+/* Responsive */
+@media (max-width: 900px){
+  .page{ padding: 28px 18px 54px; }
+}
+@media (max-width: 600px){
+  .wave{ height:44px; }
+  .wave--hero{ height:52px; }
+  .title--xl{ letter-spacing:.14em; }
+  .card{ padding:24px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
+}
