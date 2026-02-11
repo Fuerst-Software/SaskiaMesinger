@@ -1,5 +1,49 @@
-// Data (leer lassen bis echte Stimmen vorhanden sind)
-const TESTIMONIALS = [];
+// ================================
+// Kundenstimmen – echte Stimmen
+// ================================
+
+// Data (NUR echte Stimmen)
+const TESTIMONIALS = [
+  {
+    name: "Kadir Türker",
+    company: "",
+    project: "Lexware / Buchhaltung",
+    category: "Lexware / Buchhaltung",
+    date: "",
+    quote:
+`Frau Mesinger beherrscht die Buchhaltungssoftware Lexware sehr gut und verfügt über fundierte Fachkenntnisse in der Buchhaltung.
+Sie arbeitet äußerst kompetent, geduldig und erklärt jeden einzelnen Schritt ruhig und verständlich.
+
+Die Zusammenarbeit mit ihr ist sehr angenehm und effektiv.
+Ich bin sehr froh, mit ihr zusammenzuarbeiten, und kann sie uneingeschränkt weiterempfehlen.`
+  },
+  {
+    name: "Lara Nasser",
+    company: "",
+    project: "Lexware Hilfe",
+    category: "Lexware / Buchhaltung",
+    date: "",
+    quote:
+`Sehr nette Dame – sie konnte mir bei Lexware gut weiterhelfen.
+Jetzt kann ich endlich meine Rechnung schreiben.
+
+Kann ich nur weiter empfehlen 👍`
+  },
+  {
+    name: "Stefanie Gralewski",
+    company: "",
+    project: "Zusammenarbeit",
+    category: "Zusammenarbeit",
+    date: "",
+    quote:
+`Wow! Das lief richtig gut!
+
+Danke Saskia, für die tolle Zusammenarbeit.
+Faires Angebot, super schnelle und qualitativ sehr hochwertige Arbeit, dazu unglaublich nett.
+
+Wir melden uns ganz sicher mit weiteren Aufträgen.`
+  }
+];
 
 // Elements
 const grid = document.getElementById('testimonialsGrid');
@@ -16,6 +60,7 @@ function esc(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
+
 function normalize(s){ return String(s ?? "").toLowerCase().trim(); }
 
 function formatDate(iso){
@@ -47,6 +92,7 @@ function render(list){
 
     const quoteHtml = String(t.quote || "")
       .split("\n")
+      .map(line => line.trim())
       .filter(Boolean)
       .map(p => `<p>${esc(p)}</p>`)
       .join("");
@@ -74,6 +120,7 @@ function render(list){
   const n = list.length;
   if (countPill) countPill.textContent = `${n} ${n === 1 ? "Eintrag" : "Einträge"}`;
 
+  // Empty-State: nur anzeigen wenn insgesamt KEINE Testimonials existieren
   if (empty) empty.style.display = (TESTIMONIALS.length === 0) ? "block" : "none";
 }
 
@@ -90,7 +137,9 @@ if (categorySelect) categorySelect.addEventListener('change', applyFilters);
 // Initial
 render(TESTIMONIALS);
 
+// ================================
 // Scrollbar + Year + Reveal
+// ================================
 const fill = document.getElementById('scrollFill');
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
