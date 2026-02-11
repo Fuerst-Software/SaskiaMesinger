@@ -85,10 +85,45 @@ function matches(t, q, cat){
 
 function starsHtml(rating = 5){
   const r = Math.max(0, Math.min(5, Number(rating) || 0));
-  // 5-Sterne-String, ohne Icons (robust, sauber)
   const full = "★★★★★".slice(0, r);
   const empty = "☆☆☆☆☆".slice(0, 5 - r);
   return `<span class="stars" aria-label="${r} von 5 Sternen">${full}${empty}</span>`;
+}
+
+// ✅ FIX: macht Karten garantiert klickbar (öffnet reviewUrl)
+function bindCardClicks(){
+  if (!grid) return;
+
+  grid.querySelectorAll('.tcard[data-href]').forEach(card => {
+    if (card.dataset.bound === "1") return; // verhindert doppelte Listener
+    card.dataset.bound = "1";
+
+    const url = card.getAttribute('data-href');
+    if (!url) return;
+
+    const openUrl = () => window.open(url, "_blank", "noopener,noreferrer");
+
+    // Card wirkt wie Link
+    card.style.cursor = "pointer";
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", "Google Rezension öffnen");
+
+    // Click: nicht feuern wenn man (später) echte Links/Buttons drinnen hat
+    card.addEventListener('click', (e) => {
+      const blocker = e.target.closest('a, button, input, textarea, select, label');
+      if (blocker) return;
+      openUrl();
+    });
+
+    // Keyboard support
+    card.addEventListener('keydown', (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openUrl();
+      }
+    });
+  });
 }
 
 function render(list){
@@ -109,11 +144,17 @@ function render(list){
       .map(p => `<p>${esc(p)}</p>`)
       .join("");
 
-    const href = t.reviewUrl ? esc(t.reviewUrl) : "";
-    const clickableOpen = href ? `<a class="tcard__overlay" href="${href}" target="_blank" rel="noopener noreferrer" aria-label="Google Rezension öffnen"></a>` : "";
+    // ⚠️ href nicht escapen (du willst echte URL im dataset), aber fürs HTML-Attribut minimal absichern:
+    const href = String(t.reviewUrl || "").trim();
+    const hrefAttr = esc(href);
+
+    // Overlay bleibt, aber JS ist die echte “Garantie”
+    const clickableOpen = href
+      ? `<a class="tcard__overlay" href="${hrefAttr}" target="_blank" rel="noopener noreferrer" aria-label="Google Rezension öffnen"></a>`
+      : "";
 
     return `
-      <article class="tcard ${href ? "tcard--clickable" : ""}">
+      <article class="tcard ${href ? "tcard--clickable" : ""}" ${href ? `data-href="${hrefAttr}"` : ""}>
         ${clickableOpen}
 
         <div class="tcard__top">
@@ -143,6 +184,9 @@ function render(list){
 
   // Empty-State: nur anzeigen wenn insgesamt KEINE Testimonials existieren
   if (empty) empty.style.display = (TESTIMONIALS.length === 0) ? "block" : "none";
+
+  // ✅ nach Render: Click-Fix binden
+  bindCardClicks();
 }
 
 function applyFilters(){
