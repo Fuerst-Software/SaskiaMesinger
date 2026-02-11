@@ -8,7 +8,10 @@
   <meta name="description" content="Kundenstimmen und Feedback. Hier werden nach und nach echte Rückmeldungen veröffentlicht." />
   <meta name="robots" content="index,follow" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -32,37 +35,73 @@
       </div>
     </section>
 
-    <!-- NAV -->
-    <section class="section" id="nav" aria-label="Inhaltsnavigation">
+    <!-- HEADER / FILTERS -->
+    <section class="section" id="testimonials" aria-label="Kundenstimmen">
       <header class="section__head reveal">
-        <p class="kicker">Übersicht</p>
-        <h2 class="title">Feedback & Referenzen</h2>
+        <p class="kicker">Echte Rückmeldungen</p>
+        <h2 class="title">Was Kund:innen sagen</h2>
       </header>
 
-      
+      <div class="card reveal">
+        <div class="toolbar">
+          <div class="toolbar__left">
+            <div class="field">
+              <div class="field__label">Suche</div>
+              <input
+                class="field__input"
+                id="searchInput"
+                type="search"
+                placeholder="Name, Lexware, Buchhaltung, Zusammenarbeit …"
+                autocomplete="off"
+              />
+            </div>
 
-    
-        <!-- Empty State (keine Fake-Stimmen) -->
-        <div class="card empty" id="emptyState">
-          <div class="empty__inner">
-            <div class="empty__badge">Noch keine veröffentlichten Kundenstimmen</div>
-            <div class="prose">
-              <p>
-                Sobald die ersten Rückmeldungen vorliegen, werden sie hier veröffentlicht.
-              </p>
-           
+            <div class="field">
+              <div class="field__label">Kategorie</div>
+              <select class="field__input" id="categorySelect">
+                <option value="">Alle</option>
+                <option value="Lexware / Buchhaltung">Lexware / Buchhaltung</option>
+                <option value="Zusammenarbeit">Zusammenarbeit</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pill" id="countPill">0 Einträge</div>
         </div>
-      </section>
 
-      
-   
+        <div class="chips" aria-hidden="true">
+          <span class="chip">Kompetent</span>
+          <span class="chip">Geduldig</span>
+          <span class="chip">Verständlich</span>
+          <span class="chip">Schnell</span>
+          <span class="chip">Qualität</span>
+        </div>
+      </div>
+
+      <!-- GRID -->
+      <div class="grid grid--3 reveal" id="testimonialsGrid"></div>
+
+      <!-- Empty State (falls keine Stimmen vorhanden sind) -->
+      <div class="card empty reveal" id="emptyState" style="display:none;">
+        <div class="empty__inner">
+          <div class="empty__badge">Noch keine veröffentlichten Kundenstimmen</div>
+          <div class="prose">
+            <p>Sobald die ersten Rückmeldungen vorliegen, werden sie hier veröffentlicht.</p>
+          </div>
+
+          <div class="empty__actions">
+            <a class="btn" href="../index.html#kontakt">Kontakt aufnehmen</a>
+            <a class="btn btn--ghost" href="../index.html#top">Zur Startseite</a>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
       <div>
-      <span>© <span id="year"></span> Saskia Mesinger · Virtuelle Assistenz</span>
-      
+        <span>© <span id="year"></span> Saskia Mesinger · Virtuelle Assistenz</span>
       </div>
 
       <div class="footer__links">
@@ -76,6 +115,5 @@
 
   <script src="script.js"></script>
   <script src="../responsive.js" defer></script>
-
 </body>
 </html>
