@@ -48,9 +48,23 @@ Danke Saskia, für die tolle Zusammenarbeit.
 Faires Angebot, super schnelle und qualitativ sehr hochwertige Arbeit, dazu unglaublich nett.
 
 Wir melden uns ganz sicher mit weiteren Aufträgen.`
+  },
+  {
+    name: "Cornelia Arndt",
+    company: "",
+    project: "Lexware Coaching",
+    category: "Lexware / Buchhaltung",
+    date: "",
+    rating: 5,
+    reviewUrl: "https://share.google/xeMKTFXhKKCRrWRke",
+    quote:
+`Moin, gestern hatte ich ein erstes Coaching in Sachen Lexware Office. Mir wurden die mir unklaren Abläufe sehr gut erklärt und gezeigt.
+
+Auch wurde mir von Frau Mesinger angeboten, mein Lexware-Konto zu bereinigen (ich hatte etliches noch nicht gebucht). Sie war so zügig damit durch, wo ich sicher Tage dran gesessen hätte.
+
+Bin rundum zufrieden. Vielen Dank und gern wieder, falls ich nochmal Hilfe brauche.`
   }
 ];
-
 // Elements
 const grid = document.getElementById('testimonialsGrid');
 const empty = document.getElementById('emptyState');
@@ -223,3 +237,4 @@ const io = new IntersectionObserver((entries)=>{
 }, { threshold: 0.14 });
 
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
