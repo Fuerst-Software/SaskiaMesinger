@@ -63,6 +63,19 @@ Wir melden uns ganz sicher mit weiteren Aufträgen.`
 Auch wurde mir von Frau Mesinger angeboten, mein Lexware-Konto zu bereinigen (ich hatte etliches noch nicht gebucht). Sie war so zügig damit durch, wo ich sicher Tage dran gesessen hätte.
 
 Bin rundum zufrieden. Vielen Dank und gern wieder, falls ich nochmal Hilfe brauche.`
+  },
+  {
+    name: "Roland Dölker",
+    company: "",
+    project: "Zusammenarbeit",
+    category: "Zusammenarbeit",
+    date: "",
+    rating: 5,
+    reviewUrl: "https://maps.app.goo.gl/izjjFYudG7jHhkSm9",
+    quote:
+`Sehr netter Kontakt, kompetent und verwendet immer neueste Technik.
+
+Fördert das Mitwirken und die Zuarbeitung der Abschlüsse.`
   }
 ];
 // Elements
