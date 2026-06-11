@@ -1,7 +1,6 @@
 // ================================
 // Kundenstimmen – echte Stimmen
 // ================================
-
 // Data (NUR echte Stimmen)
 const TESTIMONIALS = [
   {
@@ -76,8 +75,24 @@ Bin rundum zufrieden. Vielen Dank und gern wieder, falls ich nochmal Hilfe brauc
 `Sehr netter Kontakt, kompetent und verwendet immer neueste Technik.
 
 Fördert das Mitwirken und die Zuarbeitung der Abschlüsse.`
+  },
+  {
+    name: "Mustafa Bayindir",
+    company: "",
+    project: "Zusammenarbeit",
+    category: "Zusammenarbeit",
+    date: "",
+    rating: 5,
+    reviewUrl: "https://maps.app.goo.gl/KgnqXwxHvNmJVH727",
+    quote:
+`Ich kann nur sagen: jederzeit freundlich und hilfsbereit.
+
+Top Leistungen, schnell und zuverlässig.
+
+Wer mit Profis arbeiten möchte, dem kann ich sie nur weiterempfehlen.`
   }
 ];
+
 // Elements
 const grid = document.getElementById('testimonialsGrid');
 const empty = document.getElementById('emptyState');
